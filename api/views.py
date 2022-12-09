@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.utils import timezone
 from .models import Post
 
 
@@ -15,4 +16,17 @@ def posts(request):
             'txId': post.txId
         })
     return JsonResponse(response)
+
+
+def NewPost(request):
+    if request.method == "POST":
+        post = Post()
+        post.author = request.user
+        post.datetime = timezone.now()
+        post.writeOnChain()
+        post.save()
+
+
+
+
 
