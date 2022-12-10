@@ -1,7 +1,11 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.utils import timezone
 from .models import Post
+from .forms import PostForm
+from .utils import sendTransaction
+import hashlib
 
 
 def posts(request):
@@ -20,12 +24,16 @@ def posts(request):
 
 def NewPost(request):
     if request.method == "POST":
-        post = Post()
-        post.author = request.user
-        post.datetime = timezone.now()
-        post.writeOnChain()
-        post.save()
-
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.datetime = timezone.now()
+            post.writeOnChain()
+            #return redirect('posts', {'form': form})
+    else:
+        form = PostForm()
+    return render(request, 'api/new_post.html', {'form': form})
 
 
 

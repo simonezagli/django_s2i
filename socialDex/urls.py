@@ -19,5 +19,6 @@ from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('posts', views.posts)
+    path('posts', views.posts),
+    path('new_post', views.NewPost, name='new_post'),
 ]
